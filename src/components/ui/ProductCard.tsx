@@ -1,10 +1,15 @@
+import { NAME_MAX_CHARS } from "../../const";
+import { truncateSafe } from "../../lib";
 import type { Product } from "../../types/product";
 
-type ProductCardProps = {
+interface ProductCardProps {
   product: Product;
-};
+}
+
 
 function ProductCard({ product }: ProductCardProps) {
+  const safeName = truncateSafe(product.name, NAME_MAX_CHARS);
+
   return (
     <article
       className="glass-card"
@@ -37,8 +42,10 @@ function ProductCard({ product }: ProductCardProps) {
           }}>
           {product.category}
         </p>
-        <h3 style={{ fontSize: "22px", marginBottom: "8px", lineHeight: "22px", fontWeight: 500 }}>
-          {product.name}
+        <h3
+          title={product.name}
+          style={{ fontSize: "22px", marginBottom: "8px", lineHeight: "22px", fontWeight: 500 }}>
+          {safeName}
         </h3>
         <div
           style={{
