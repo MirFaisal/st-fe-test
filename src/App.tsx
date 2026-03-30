@@ -2,47 +2,31 @@ import { Search, Loader2, RefreshCw, AlertCircle, Package } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./services/api";
 import type { Product } from "./types/product";
-
-const ITEMS_PER_PAGE = 12;
-const SEARCH_DEBOUNCE_MS = 350;
-const RETRY_DELAY_MS = 700;
-const MAX_RETRIES = 1;
-const CATEGORIES = ["Electronics", "Clothing", "Home", "Outdoors"];
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const getErrorMessage = (error: unknown) =>
-  error instanceof Error ? error.message : "Something went wrong while loading products.";
-
-const formatPrice = (value: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
+import { ITEMS_PER_PAGE, SEARCH_DEBOUNCE_MS, RETRY_DELAY_MS, MAX_RETRIES, CATEGORIES } from "./const";
+import { formatPrice, getErrorMessage, wait } from "./lib";
 
 function App() {
-  // Step 1: data state
+  // data state
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Step 2: query state
+  // query state
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("");
 
-  // Step 3: network state
+  // network state
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState(0);
 
-  // Step 4: stale request guard
+  // stale request guard
   const latestRequestRef = useRef(0);
 
-  // Step 5: debounce search input
+  // debounce search input
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setPage(1);
@@ -52,12 +36,12 @@ function App() {
     return () => window.clearTimeout(timer);
   }, [searchInput]);
 
-  // Step 6: reset to page 1 when category changes
+  // reset to page 1 when category changes
   useEffect(() => {
     setPage(1);
   }, [category]);
 
-  // Step 7: fetch products with retry + stale response protection
+  // fetch products with retry + stale response protection
   useEffect(() => {
     let isActive = true;
     latestRequestRef.current += 1;
@@ -117,7 +101,7 @@ function App() {
     };
   }, [page, category, searchQuery, refreshToken]);
 
-  // Step 8: pagination numbers around current page
+  // pagination numbers around current page
   const pageNumbers = useMemo(() => {
     const pages: number[] = [];
     const start = Math.max(1, page - 2);
@@ -130,7 +114,7 @@ function App() {
     return pages;
   }, [page, totalPages]);
 
-  // Step 9: manual retry from UI
+  // manual retry from UI
   const handleRetry = () => {
     if (products.length === 0) {
       setIsLoading(true);
@@ -307,29 +291,41 @@ function App() {
                 gap: "1rem",
               }}>
               {products.map((product) => (
-                <article key={product.id} className="glass-card" style={{ overflow: "hidden" }}>
+                <article
+                  key={product.id}
+                  className="glass-card"
+                  style={{
+                    overflow: "hidden",
+                    minWidth: "209.6px",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}>
                   <img
                     src={product.imageUrl}
                     alt={product.name}
                     loading="lazy"
-                    style={{ width: "100%", height: "170px", objectFit: "cover" }}
+                    style={{
+                      width: "100%",
+                      height: "210px",
+                      objectFit: "cover",
+                      borderBottomRightRadius: "12px",
+                      borderBottomLeftRadius: "12px",
+                    }}
                   />
-                  <div style={{ padding: "0.9rem" }}>
+                  <div style={{ padding: "8px" }}>
                     <p
                       style={{
-                        color: "var(--primary)",
-                        textTransform: "uppercase",
-                        fontSize: "0.75rem",
-                        marginBottom: "0.35rem",
-                        fontWeight: 600,
-                        letterSpacing: "0.03em",
+                        fontSize: "14px",
+                        marginBottom: "2px",
+                        fontWeight: 400,
+                        lineHeight: "20px",
                       }}>
                       {product.category}
                     </p>
-                    <h3 style={{ fontSize: "1rem", marginBottom: "0.35rem" }}>{product.name}</h3>
-                    <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "0.75rem" }}>
-                      {product.description}
-                    </p>
+                    <h3
+                      style={{ fontSize: "22px", marginBottom: "8px", lineHeight: "22px", fontWeight: 500 }}>
+                      {product.name}
+                    </h3>
                     <div
                       style={{
                         display: "flex",
@@ -337,10 +333,15 @@ function App() {
                         justifyContent: "space-between",
                         gap: "0.5rem",
                       }}>
-                      <p style={{ fontWeight: 700 }}>{formatPrice(product.price)}</p>
-                      <span style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>
-                        {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
-                      </span>
+                      <p
+                        style={{
+                          fontWeight: 500,
+                          color: "var(--primary)",
+                          fontSize: "20px",
+                          lineHeight: "22px",
+                        }}>
+                        {formatPrice(product.price)}
+                      </p>
                     </div>
                   </div>
                 </article>
