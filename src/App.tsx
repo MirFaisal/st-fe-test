@@ -1,10 +1,15 @@
-import { Search, Loader2, RefreshCw, AlertCircle, Package } from "lucide-react";
+import { Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./services/api";
 import type { Product } from "./types/product";
 import { ITEMS_PER_PAGE, SEARCH_DEBOUNCE_MS, RETRY_DELAY_MS, MAX_RETRIES, CATEGORIES } from "./const";
 import { getErrorMessage, wait } from "./lib";
-import ProductCard from "./components/ProductCard";
+import InlineErrorBanner from "./components/states/InlineErrorBanner";
+import LoadingState from "./components/states/LoadingState";
+import ErrorState from "./components/states/ErrorState";
+import EmptyState from "./components/states/EmptyState";
+import ProductsSection from "./components/states/ProductsSection";
+import RefreshBadge from "./components/states/RefreshBadge";
 
 function App() {
   // data state
@@ -192,191 +197,31 @@ function App() {
 
       <main>
         {!isLoading && error && products.length > 0 ? (
-          <div
-            role="alert"
-            className="glass-panel"
-            style={{
-              marginBottom: "1rem",
-              padding: "0.75rem 1rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.6rem",
-              borderColor: "rgba(239,68,68,0.4)",
-            }}>
-            <AlertCircle size={18} color="var(--error)" />
-            <p style={{ flex: 1, color: "var(--text-main)" }}>{error}. Showing last successful products.</p>
-            <button type="button" onClick={handleRetry} style={{ color: "var(--primary)", fontWeight: 600 }}>
-              Retry
-            </button>
-          </div>
+          <InlineErrorBanner message={error} onRetry={handleRetry} />
         ) : null}
 
-        {isLoading ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "4rem",
-              border: "1px dashed var(--border)",
-              borderRadius: "16px",
-            }}>
-            <Loader2
-              size={40}
-              color="var(--primary)"
-              style={{ marginBottom: "1rem", animation: "spin 1.5s linear infinite" }}
-            />
-            <h2 style={{ marginBottom: "0.5rem" }}>Loading products...</h2>
-            <p style={{ color: "var(--text-muted)", textAlign: "center", maxWidth: "500px" }}>
-              The API is intentionally slow and flaky, so this may take a moment.
-            </p>
-          </div>
-        ) : null}
+        {isLoading ? <LoadingState /> : null}
 
         {!isLoading && error && products.length === 0 ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "4rem",
-              border: "1px dashed var(--border)",
-              borderRadius: "16px",
-            }}>
-            <AlertCircle size={40} color="var(--error)" style={{ marginBottom: "1rem" }} />
-            <h2 style={{ marginBottom: "0.5rem" }}>Could not load products</h2>
-            <p
-              style={{
-                color: "var(--text-muted)",
-                textAlign: "center",
-                maxWidth: "500px",
-                marginBottom: "1rem",
-              }}>
-              {error}
-            </p>
-            <button type="button" className="btn-primary" onClick={handleRetry}>
-              <RefreshCw size={16} style={{ marginRight: "0.4rem" }} />
-              Try Again
-            </button>
-          </div>
+          <ErrorState message={error} onRetry={handleRetry} />
         ) : null}
 
-        {!isLoading && !error && products.length === 0 ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "4rem",
-              border: "1px dashed var(--border)",
-              borderRadius: "16px",
-            }}>
-            <Package size={40} color="var(--text-muted)" style={{ marginBottom: "1rem" }} />
-            <h2 style={{ marginBottom: "0.5rem" }}>No products found</h2>
-            <p style={{ color: "var(--text-muted)", textAlign: "center", maxWidth: "500px" }}>
-              Try a different search term or category.
-            </p>
-          </div>
-        ) : null}
+        {!isLoading && !error && products.length === 0 ? <EmptyState /> : null}
 
         {!isLoading && products.length > 0 ? (
-          <>
-            <section
-              aria-label="Product list"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-                gap: "1rem",
-              }}>
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </section>
-
-            <footer
-              aria-label="Pagination"
-              style={{
-                marginTop: "1.25rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "0.75rem",
-              }}>
-              <p style={{ color: "var(--text-muted)" }}>
-                Showing {(page - 1) * ITEMS_PER_PAGE + 1}-{Math.min(page * ITEMS_PER_PAGE, total)} of {total}
-              </p>
-
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-                <button
-                  type="button"
-                  onClick={() => setPage((current) => Math.max(1, current - 1))}
-                  disabled={page === 1}
-                  className="glass-panel"
-                  style={{ padding: "0.4rem 0.7rem", opacity: page === 1 ? 0.5 : 1 }}>
-                  Previous
-                </button>
-
-                {pageNumbers.map((pageNumber) => (
-                  <button
-                    type="button"
-                    key={pageNumber}
-                    onClick={() => setPage(pageNumber)}
-                    aria-current={pageNumber === page ? "page" : undefined}
-                    className="glass-panel"
-                    style={{
-                      padding: "0.4rem 0.7rem",
-                      background: pageNumber === page ? "var(--primary)" : undefined,
-                      color: pageNumber === page ? "white" : undefined,
-                    }}>
-                    {pageNumber}
-                  </button>
-                ))}
-
-                <button
-                  type="button"
-                  onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
-                  disabled={page === totalPages}
-                  className="glass-panel"
-                  style={{ padding: "0.4rem 0.7rem", opacity: page === totalPages ? 0.5 : 1 }}>
-                  Next
-                </button>
-              </div>
-            </footer>
-          </>
+          <ProductsSection
+            products={products}
+            page={page}
+            total={total}
+            totalPages={totalPages}
+            pageNumbers={pageNumbers}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={setPage}
+          />
         ) : null}
 
-        {isRefreshing ? (
-          <div
-            className="glass-panel"
-            role="status"
-            aria-live="polite"
-            style={{
-              position: "fixed",
-              right: "1rem",
-              bottom: "1rem",
-              padding: "0.5rem 0.8rem",
-              borderRadius: "999px",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.45rem",
-            }}>
-            <Loader2 size={15} color="var(--primary)" style={{ animation: "spin 1.2s linear infinite" }} />
-            <span style={{ fontSize: "0.85rem" }}>Updating results...</span>
-          </div>
-        ) : null}
+        {isRefreshing ? <RefreshBadge /> : null}
       </main>
-
-      <style>
-        {`
-          @keyframes spin {
-            100% { transform: rotate(360deg); }
-          }
-        `}
-      </style>
     </div>
   );
 }

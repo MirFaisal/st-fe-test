@@ -22,3 +22,13 @@ export interface FetchProductsParams {
   category?: string;
   search?: string;
 }
+
+export interface ProductsSectionProps {
+  products: Product[];
+  page: number;
+  total: number;
+  totalPages: number;
+  pageNumbers: number[];
+  itemsPerPage: number;
+  onPageChange: (nextPage: number) => void;
+}
