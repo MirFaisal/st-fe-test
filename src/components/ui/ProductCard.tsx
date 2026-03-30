@@ -6,7 +6,6 @@ interface ProductCardProps {
   product: Product;
 }
 
-
 function ProductCard({ product }: ProductCardProps) {
   const safeName = truncateSafe(product.name, NAME_MAX_CHARS);
 
