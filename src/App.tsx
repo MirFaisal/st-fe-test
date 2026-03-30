@@ -30,10 +30,10 @@ function App() {
   const [refreshToken, setRefreshToken] = useState(0);
   const [isSoftErrorDismissed, setIsSoftErrorDismissed] = useState(false);
 
-  // stale request guard
+  // Request id guard: avoids old/slow responses overriding newer user actions.
   const latestRequestRef = useRef(0);
 
-  // debounce search input
+  // Debounce search so we don't call API on every key press.
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setPage(1);
@@ -43,11 +43,12 @@ function App() {
     return () => window.clearTimeout(timer);
   }, [searchInput]);
 
-  // reset to page 1 when category changes
+  // Any filter change should restart from page 1 to keep pagination valid.
   useEffect(() => {
     setPage(1);
   }, [category]);
 
+  // If a new error appears, show the soft error popup again (even if dismissed before).
   useEffect(() => {
     if (error) {
       setIsSoftErrorDismissed(false);
@@ -66,6 +67,7 @@ function App() {
       setIsRefreshing(true);
     }
 
+    // A response is stale when component unmounted or a newer request already started.
     const isStale = () => !isActive || requestId !== latestRequestRef.current;
 
     const loadProducts = async (retryCount = 0) => {
@@ -90,6 +92,7 @@ function App() {
           return;
         }
 
+        // Retry once because this mocked API is intentionally flaky.
         if (retryCount < MAX_RETRIES) {
           await wait(RETRY_DELAY_MS);
           if (!isStale()) {
@@ -129,6 +132,7 @@ function App() {
 
   // manual retry from UI
   const handleRetry = () => {
+    // Keep UX responsive: if there is old data, show refreshing badge instead of full loader.
     if (products.length === 0) {
       setIsLoading(true);
     } else {
@@ -203,6 +207,7 @@ function App() {
       </section>
 
       <main>
+        {/* Soft error: keep last successful products visible and show a retry popup. */}
         {!isLoading && error && products.length > 0 ? (
           !isSoftErrorDismissed ? (
             <InlineErrorBanner
@@ -213,14 +218,18 @@ function App() {
           ) : null
         ) : null}
 
+        {/* Initial/empty-data loading state. */}
         {isLoading ? <LoadingState /> : null}
 
+        {/* Hard error: no data available to render. */}
         {!isLoading && error && products.length === 0 ? (
           <ErrorState message={error} onRetry={handleRetry} />
         ) : null}
 
+        {/* API succeeded but matched zero records. */}
         {!isLoading && !error && products.length === 0 ? <EmptyState /> : null}
 
+        {/* Main success path with product grid and pagination. */}
         {!isLoading && products.length > 0 ? (
           <ProductsSection
             products={products}
@@ -233,6 +242,7 @@ function App() {
           />
         ) : null}
 
+        {/* Background refresh indicator while keeping old data on screen. */}
         {isRefreshing ? <RefreshBadge /> : null}
       </main>
     </div>
