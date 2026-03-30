@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./services/api";
 import type { Product } from "./types/product";
 import { ITEMS_PER_PAGE, SEARCH_DEBOUNCE_MS, RETRY_DELAY_MS, MAX_RETRIES, CATEGORIES } from "./const";
-import { formatPrice, getErrorMessage, wait } from "./lib";
+import { getErrorMessage, wait } from "./lib";
 
 function App() {
   // data state
@@ -319,6 +319,7 @@ function App() {
                         marginBottom: "2px",
                         fontWeight: 400,
                         lineHeight: "20px",
+                        color: "var(--text-muted)",
                       }}>
                       {product.category}
                     </p>
@@ -340,7 +341,7 @@ function App() {
                           fontSize: "20px",
                           lineHeight: "22px",
                         }}>
-                        {formatPrice(product.price)}
+                        ৳ {product.price}
                       </p>
                     </div>
                   </div>
