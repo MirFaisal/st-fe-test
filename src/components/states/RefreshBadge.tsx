@@ -33,7 +33,9 @@ function RefreshBadge() {
         }}>
         <Loader2 size={13} color="#fff" style={{ animation: "spin 1.1s linear infinite" }} />
       </span>
-      <span style={{ fontSize: "0.86rem", fontWeight: 600, letterSpacing: "0.01em" }}>Updating results...</span>
+      <span style={{ fontSize: "0.86rem", fontWeight: 600, letterSpacing: "0.01em" }}>
+        Updating results...
+      </span>
 
       <style>
         {`
