@@ -7,13 +7,13 @@ function InlineErrorBanner({ message, onRetry, onDismiss }: InlineErrorBannerPro
       role="alert"
       style={{
         position: "fixed",
-        right: "1.2rem",
-        top: "1.2rem",
-        width: "min(420px, calc(100vw - 2.4rem))",
-        padding: "0.85rem 0.95rem",
+        right: "19px",
+        top: "19px",
+        width: "min(420px, calc(100vw - 38px))",
+        padding: "14px 15px",
         display: "flex",
         flexDirection: "column",
-        gap: "0.75rem",
+        gap: "12px",
         background: "linear-gradient(135deg, #b91c1c, #ef4444)",
         color: "#fff",
         border: "1px solid rgba(255, 255, 255, 0.28)",
@@ -22,9 +22,9 @@ function InlineErrorBanner({ message, onRetry, onDismiss }: InlineErrorBannerPro
         zIndex: 45,
         animation: "toastEnter 240ms ease-out",
       }}>
-      <div style={{ display: "flex", width: "100%", alignItems: "flex-start", gap: "0.55rem" }}>
+      <div style={{ display: "flex", width: "100%", alignItems: "flex-start", gap: "9px" }}>
         <AlertCircle size={18} color="#fff" style={{ marginTop: "2px", flexShrink: 0 }} />
-        <p style={{ flex: 1, lineHeight: 1.45, fontSize: "0.9rem" }}>
+        <p style={{ flex: 1, lineHeight: 1.45, fontSize: "14px" }}>
           {message}. Showing last successful products.
         </p>
         <button
@@ -44,7 +44,7 @@ function InlineErrorBanner({ message, onRetry, onDismiss }: InlineErrorBannerPro
             color: "#991b1b",
             background: "#fff",
             borderRadius: "8px",
-            padding: "0.38rem 0.7rem",
+            padding: "6px 11px",
             fontWeight: 700,
           }}>
           Retry Now

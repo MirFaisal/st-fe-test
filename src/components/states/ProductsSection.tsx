@@ -17,7 +17,7 @@ function ProductsSection({
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-          gap: "1rem",
+          gap: "16px",
         }}>
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
@@ -27,23 +27,23 @@ function ProductsSection({
       <footer
         aria-label="Pagination"
         style={{
-          width: "700px",
+          width: "min(700px, 100%)",
           marginInline: "auto",
-          marginTop: "1.25rem",
+          marginTop: "20px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
-          gap: "0.75rem",
+          gap: "12px",
         }}>
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
           <button
             type="button"
             onClick={() => onPageChange(Math.max(1, page - 1))}
             disabled={page === 1}
             className="glass-panel"
-            style={{ padding: "0.4rem 0.7rem", opacity: page === 1 ? 0.5 : 1 }}>
+            style={{ padding: "6px 11px", opacity: page === 1 ? 0.5 : 1 }}>
             Previous
           </button>
 
@@ -55,7 +55,7 @@ function ProductsSection({
               aria-current={pageNumber === page ? "page" : undefined}
               className="glass-panel"
               style={{
-                padding: "0.4rem 0.7rem",
+                padding: "6px 11px",
                 background: pageNumber === page ? "var(--primary)" : undefined,
                 color: pageNumber === page ? "white" : undefined,
               }}>
@@ -67,7 +67,7 @@ function ProductsSection({
             onClick={() => onPageChange(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
             className="glass-panel"
-            style={{ padding: "0.4rem 0.7rem", opacity: page === totalPages ? 0.5 : 1 }}>
+            style={{ padding: "6px 11px", opacity: page === totalPages ? 0.5 : 1 }}>
             Next
           </button>
         </div>

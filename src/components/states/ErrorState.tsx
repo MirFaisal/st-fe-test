@@ -9,18 +9,18 @@ function ErrorState({ message, onRetry }: ErrorStateProps) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "4rem",
+        padding: "64px",
         border: "1px dashed var(--border)",
         borderRadius: "16px",
       }}>
-      <AlertCircle size={40} color="var(--error)" style={{ marginBottom: "1rem" }} />
-      <h2 style={{ marginBottom: "0.5rem" }}>Could not load products</h2>
+      <AlertCircle size={40} color="var(--error)" style={{ marginBottom: "16px" }} />
+      <h2 style={{ marginBottom: "8px" }}>Could not load products</h2>
       <p
         style={{
           color: "var(--text-muted)",
           textAlign: "center",
           maxWidth: "500px",
-          marginBottom: "1rem",
+          marginBottom: "16px",
         }}>
         {message}
       </p>

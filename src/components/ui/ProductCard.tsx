@@ -52,7 +52,7 @@ function ProductCard({ product }: ProductCardProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: "0.5rem",
+            gap: "8px",
           }}>
           <p
             style={{

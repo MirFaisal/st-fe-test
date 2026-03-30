@@ -140,26 +140,26 @@ function App() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", padding: "2rem" }}>
-      <header className="glass-panel" style={{ padding: "2rem", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: 600, marginBottom: "0.5rem" }}>Premium Products</h1>
+    <div style={{ minHeight: "100vh", padding: "32px" }}>
+      <header className="glass-panel" style={{ padding: "32px", marginBottom: "32px" }}>
+        <h1 style={{ fontSize: "32px", fontWeight: 600, marginBottom: "8px" }}>Premium Products</h1>
         <p style={{ color: "var(--text-muted)" }}>
           Browse our collection. Handling the flaky API gracefully is part of the challenge.
         </p>
       </header>
 
-      <section style={{ display: "flex", gap: "1rem", marginBottom: "2rem", flexWrap: "wrap" }}>
+      <section style={{ display: "flex", gap: "16px", marginBottom: "32px", flexWrap: "wrap" }}>
         <div
           className="glass-panel"
           style={{
             display: "flex",
             alignItems: "center",
-            padding: "0.75rem 1rem",
+            padding: "12px 16px",
             flex: 1,
             minWidth: "260px",
             maxWidth: "420px",
           }}>
-          <Search size={20} color="var(--text-muted)" style={{ marginRight: "0.75rem" }} />
+          <Search size={20} color="var(--text-muted)" style={{ marginRight: "12px" }} />
           <input
             type="text"
             value={searchInput}
@@ -172,7 +172,7 @@ function App() {
               color: "var(--text-main)",
               outline: "none",
               width: "100%",
-              fontSize: "1rem",
+              fontSize: "16px",
             }}
           />
         </div>
@@ -183,10 +183,10 @@ function App() {
           className="glass-panel"
           aria-label="Filter by category"
           style={{
-            padding: "0.75rem 1rem",
+            padding: "12px 16px",
             color: "var(--text-main)",
             outline: "none",
-            fontSize: "1rem",
+            fontSize: "16px",
             cursor: "pointer",
             appearance: "none",
             minWidth: "200px",
