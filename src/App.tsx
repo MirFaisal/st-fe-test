@@ -28,6 +28,7 @@ function App() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState(0);
+  const [isSoftErrorDismissed, setIsSoftErrorDismissed] = useState(false);
 
   // stale request guard
   const latestRequestRef = useRef(0);
@@ -46,6 +47,12 @@ function App() {
   useEffect(() => {
     setPage(1);
   }, [category]);
+
+  useEffect(() => {
+    if (error) {
+      setIsSoftErrorDismissed(false);
+    }
+  }, [error]);
 
   // fetch products with retry + stale response protection
   useEffect(() => {
@@ -197,7 +204,13 @@ function App() {
 
       <main>
         {!isLoading && error && products.length > 0 ? (
-          <InlineErrorBanner message={error} onRetry={handleRetry} />
+          !isSoftErrorDismissed ? (
+            <InlineErrorBanner
+              message={error}
+              onRetry={handleRetry}
+              onDismiss={() => setIsSoftErrorDismissed(true)}
+            />
+          ) : null
         ) : null}
 
         {isLoading ? <LoadingState /> : null}
