@@ -25,7 +25,7 @@ function InlineErrorBanner({ message, onRetry, onDismiss }: InlineErrorBannerPro
       <div style={{ display: "flex", width: "100%", alignItems: "flex-start", gap: "9px" }}>
         <AlertCircle size={18} color="#fff" style={{ marginTop: "2px", flexShrink: 0 }} />
         <p style={{ flex: 1, lineHeight: 1.45, fontSize: "14px" }}>
-          {message}. Showing last successful products.
+          {message} You're still viewing the most recently loaded products.
         </p>
         <button
           type="button"

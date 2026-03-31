@@ -25,7 +25,7 @@ export const api = {
 
     // 2. Simulate probabilistic failure (20% chance)
     if (Math.random() < 0.2) {
-      throw new Error('Network Error: Failed to fetch products. The server might be overloaded.');
+      throw new Error('We could not load products right now. Please try again in a moment.');
     }
 
     // 3. Process data
